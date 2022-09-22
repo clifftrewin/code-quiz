@@ -1,0 +1,42 @@
+body {
+font-family: Tahoma, Verdana, Arial, sans-serif;
+background-color: aliceblue;
+
+}
+
+/* Top of Page with High Scores Button and Timer */
+#top-of-page {
+    display: flex;
+    font-size: 20px;
+    justify-content: space-between;
+}
+#high-scores {}
+#timer {}
+/* Main Heading */
+#main-header {
+    font-size: 36px;
+    width: 100%;
+    text-align: center;
+    margin-top: 100px;}
+/* Instructions */
+#instructions{
+    margin-top: 50px;
+    margin-left: 30%;
+    font-weight: bold;
+    text-align:center;
+    width: 40%;
+}
+/* Start Quiz Buttom */
+.button-container {
+    margin-top: 50px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+#start-quiz{
+    color: white;
+    background-color: indigo;
+    font-size: 24px;
+    width: 150px;
+}
