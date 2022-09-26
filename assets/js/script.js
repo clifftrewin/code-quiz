@@ -103,7 +103,7 @@ function allDone () {
     inputField.setAttribute("style","border: 2px solid black;");
     inputField.setAttribute("input","text");
     inputField.setAttribute("placeholder","NN");
-    submitButt.setAttribute("style","color:white; background-color:indigo; font-size: 16px; margin-left: 20px;");
+    submitButt.setAttribute("class","submitButton");
     enterInit.textContent = "Enter Initials";
     submitButt.textContent = "Submit";
     console.log(inputField.value);
@@ -288,6 +288,8 @@ viewHS.addEventListener('click',function(){
 });
 
 startQuizE1.addEventListener('click',function() {
+    const vHSButt = document.getElementById("vHS");
+    vHSButt.remove();
     timerInterval = setInterval(function()  {
         if (secondsLeft !== 0){
             secondsLeft--
@@ -304,7 +306,7 @@ startQuizE1.addEventListener('click',function() {
    document.body.appendChild(bCont[i]);
    bCont[i].appendChild(ansButt[i]);
    bCont[i].setAttribute("style","margin-top: 50px; height: 40px; display: flex; justify-content: center;");
-   ansButt[i].setAttribute("style","color: white; background-color: indigo; font-size: 24px;");
+   ansButt[i].setAttribute("class","ansButton");
    ansButt[i].textContent = quiz[0].answers[i];
    };
   answerEventListener();
