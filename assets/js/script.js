@@ -1,4 +1,5 @@
 var startQuizE1 = document.querySelector("#start-quiz");
+var viewHS = document.querySelector("#vHS");
 var timerSpan = document.querySelector("#seconds");
 var gameScore = "";
 var timerInterval = 0;
@@ -7,7 +8,6 @@ var secondsLeft = 75;
 timerSpan.textContent = secondsLeft;
 var ansButt = [];
 var highScoreFlag = 1;
-
 function answerEventListener() {
     ansButt[0].addEventListener('click',function(){
     if (quiz[quesNum].correct === '1'){
@@ -64,8 +64,6 @@ function answerEventListener() {
 }
 
 function nextQuestion () {
-
-    console.log(quesNum,"rest of next page");
     document.body.children[0].children[1].textContent = quiz[quesNum].question; 
     for (let i = 0; i < 4; i++) {
        ansButt[i].textContent = quiz[quesNum].answers[i];
@@ -101,9 +99,10 @@ function allDone () {
     submitCont.appendChild(inputField);
     submitCont.appendChild(submitButt);
     submitCont.setAttribute("style","display:flex; justify-content: center; margin-top: 30px;");
-    enterInit.setAttribute("style","font-size: 16px;");
+    enterInit.setAttribute("style","font-size: 16px; margin-right: 10px;");
     inputField.setAttribute("style","border: 2px solid black;");
-    inputField.setAttribute("input","text")
+    inputField.setAttribute("input","text");
+    inputField.setAttribute("placeholder","NN");
     submitButt.setAttribute("style","color:white; background-color:indigo; font-size: 16px; margin-left: 20px;");
     enterInit.textContent = "Enter Initials";
     submitButt.textContent = "Submit";
@@ -117,7 +116,7 @@ function allDone () {
          gameScore = initField +'-'+secondsLeft;
          console.log(gameScore);
          } else {
-         gameScore = "";};
+         gameScore = "NN"+'-'+secondsLeft;};
      highScores();
     });
 
@@ -127,40 +126,60 @@ function allDone () {
 function highScores ()  {
     // Retrieve and update High Score Array
     console.log('high scores page')
+    console.log(gameScore);
     var hSArray = [];
     var newArray = [];
     var bkGS = 0;
+    if (highScoreFlag === 0) {
+        gameScore = "NN-00";
+    }
+    bkGS = gameScore.lastIndexOf("-");
+    scGS = gameScore.slice(bkGS+1);
     var bkAr = 0;
     var gSInc = false;
     var retrievedData = localStorage.getItem("hSStorage");
     hSArray = JSON.parse(retrievedData);
+    console.log(hSArray);
     if (hSArray === null) {
         newArray[0] = gameScore;
-        console.log ('if one')
+        console.log(newArray);
         } else {
-        console.log("if two")
-        j = 0;
-        for (let i = 0; i < hSArray.length; i++) {
-            bkGS = gameScore.lastIndexOf("-");
-            bkAr = hSArray[i].lastIndexOf("-");
-            if (!gSInc && (gameScore.slice(bkGS+1) > hSArray[i].slice(bkAr+1))){
-                newArray[j] = gameScore;
-                j = j+ 1;
-                newArray[j] = hSArray[i];
-                gSInc = true;
-            } else {
-                newArray[j] = hSArray[i];
+        let j = 0;
+        hSLength = hSArray.length
+        for (let i = 0; i < hSLength; i++) {
+            if (hSArray[i] === null) {
+                hSArray[i] = "NN-00";
             }
-            if (gSInc === false && j === hSArray.length) {
+
+             bkAr = hSArray[i].lastIndexOf("-");
+             scAr = hSArray[i].slice(bkAr+1);
+             if (gSInc === true) {
+                newArray[j] = hSArray[i];
                 j = j + 1;
+             } else if (scGS > scAr) {
                 newArray[j] = gameScore;
-                gSInc = false;
+                j = j + 1;
+                newArray[j] = hSArray[i];
+                j = j + 1;
+                gSInc = true;
+             }  else  {
+                newArray[j] = hSArray[i];
+                j = j + 1; 
+             }
             }
-           }
+            if (gSInc === false) {
+                newArray[j] = gameScore;
+            }
+        } 
+        nALength = newArray.length;
+        if(nALength > 1 && newArray[nALength - 1] === "NN-00"){
+            newArray.length = nALength - 1;
         }
         // Save Down Update of High Score Array
         if (newArray.length > 0) {
+            console.log(newArray);
             localStorage.setItem("hSStorage", JSON.stringify(newArray));
+            console.log("after storage",newArray);
         }   
         // High Score Page Creation
         document.body.children[0].children[1].textContent = "Highscores";
@@ -171,18 +190,26 @@ function highScores ()  {
         document.body.children[1].remove();
         document.body.children[1].remove();
         document.body.children[1].remove();
+        }
+        if (highScoreFlag === 0){
+            document.body.children[0].children[0].remove();
+            document.body.children[1].remove();
+            document.body.children[1].remove();
+        }
         console.log ("beforelist");
         var highScoreList = document.createElement("ol");
-        var hSListItem = document.createElement("li");
         document.body.appendChild(highScoreList);
+        highScoreList.setAttribute("class","hSList");
+        var hSListItem = document.createElement("li");
+        
         highScoreList.appendChild(hSListItem);
         console.log(newArray.length);
         console.log(newArray);
         for (let i = 0; i < newArray.length ; i++) {
-            console.log("loop",i);  
-            highScoreList.children[i].textContent = newArray[i];
-            hSListItem = document.createElement("li");
+            console.log("loop",i);    
             highScoreList.appendChild(hSListItem);
+            hSListItem.textContent = newArray[i];
+            hSListItem = document.createElement("li");
         }
         var buttCont = document.createElement("div");
         var goBack = document.createElement("button");
@@ -206,7 +233,7 @@ function highScores ()  {
         });
 
         }
-        }
+        
     
 
 let quiz = [
@@ -252,14 +279,21 @@ let quiz = [
                   "4. console.log"]
     }
 ]
-   
+  
+viewHS.addEventListener('click',function(){
+   highScoreFlag = 0;
+   const vHSButt = document.getElementById("vHS");
+   vHSButt.remove();
+   highScores();
+});
 
 startQuizE1.addEventListener('click',function() {
     timerInterval = setInterval(function()  {
-        secondsLeft--
+        if (secondsLeft !== 0){
+            secondsLeft--
+        }
         timerSpan.textContent = secondsLeft;
     },1000);
-    console.log(timerInterval);
    var bCont = [];
    document.body.children[0].children[1].textContent = quiz[0].question; 
    document.body.children[1].textContent = '';
